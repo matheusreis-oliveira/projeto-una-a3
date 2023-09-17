@@ -2,42 +2,41 @@
 
 namespace CatalogApi.Repository
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private ProductRepository _produtoRepo;
-        private CategoryRepository _categoriaRepo;
-        public AppDbContext _dbContext;
+        private readonly IProductRepository _produtoRepo;
+        private readonly ICategoryRepository _categoriaRepo;
+        private readonly AppDbContext _dbContext;
+        private readonly ILogger<UnitOfWork> _logger;
 
-        public UnitOfWork(AppDbContext context)
+        public UnitOfWork(AppDbContext context, IProductRepository productRepository, ICategoryRepository categoryRepository, ILogger<UnitOfWork> logger)
         {
             _dbContext = context;
+            _produtoRepo = productRepository;
+            _categoriaRepo = categoryRepository;
+            _logger = logger;
         }
 
-        public IProductRepository ProductRepository
-        {
-            get
-            {
-                return _produtoRepo = _produtoRepo ?? new ProductRepository(_dbContext);
-            }
-        }
+        public IProductRepository ProductRepository => _produtoRepo;
 
-        public ICategoryRepository CategoryRepository
-        {
-            get
-            {
-                return _categoriaRepo = _categoriaRepo ?? new CategoryRepository(_dbContext);
-            }
-        }
+        public ICategoryRepository CategoryRepository => _categoriaRepo;
 
         public async Task Commit()
         {
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ocorreu um erro ao salvar as mudanças no banco de dados.");
+                throw;
+            }
         }
 
         public void Dispose()
         {
-            _dbContext.Dispose();
+            _dbContext?.Dispose();
         }
-
     }
 }
