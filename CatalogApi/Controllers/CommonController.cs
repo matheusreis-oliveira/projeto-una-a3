@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CatalogApi.Models;
 using CatalogApi.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,7 @@ namespace CatalogApi.Controllers
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public abstract class CommonController<TEntity, TDto> : ControllerBase
-        where TEntity : class
+        where TEntity : BaseModel
         where TDto : class
     {
         protected readonly IUnitOfWork _uof;
@@ -36,7 +37,7 @@ namespace CatalogApi.Controllers
         [HttpGet("{id}")]
         public virtual async Task<ActionResult<TDto>> Get(Guid id)
         {
-            var entity = await Repository.GetById(e => EF.Property<Guid>(e, "Id") == id);
+            var entity = await Repository.GetById(e => e.Id == id);
 
             if (entity == null)
             {
@@ -57,7 +58,7 @@ namespace CatalogApi.Controllers
 
             var newDto = _mapper.Map<TDto>(entity);
 
-            return new CreatedAtRouteResult("GetById", new { id = EF.Property<Guid>(entity, "Id") }, newDto);
+            return new CreatedAtRouteResult("GetById", new { id = entity.Id }, newDto);
         }
 
         [HttpPut("{id}")]
@@ -65,7 +66,7 @@ namespace CatalogApi.Controllers
         {
             var entity = _mapper.Map<TEntity>(dto);
 
-            if (id != EF.Property<Guid>(entity, "Id"))
+            if (id != entity.Id)
             {
                 return BadRequest();
             }
@@ -79,7 +80,7 @@ namespace CatalogApi.Controllers
         [HttpDelete("{id}")]
         public virtual async Task<ActionResult<TDto>> Delete(Guid id)
         {
-            var entity = await Repository.GetById(e => EF.Property<Guid>(e, "Id") == id);
+            var entity = await Repository.GetById(e => e.Id == id);
 
             if (entity == null)
             {

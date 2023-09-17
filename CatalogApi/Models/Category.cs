@@ -5,15 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace CatalogApi.Models;
 
 [Table("Categorias")]
-public class Category
+public class Category : BaseModel
 {
     public Category()
     {
         Products = new Collection<Product>();
     }
-
-    [Key]
-    public Guid Id { get; set; }
 
     [Required]
     [StringLength(80)]
