@@ -14,6 +14,8 @@ public static class ServiceCollectionExtension
 {
     public static void AddCustomServices(this IServiceCollection services)
     {
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         var mappingConfig = new MapperConfiguration(mc =>
@@ -76,11 +78,18 @@ public static class ServiceCollectionExtension
                 });
     }
 
-    public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
+    public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
-        string connectionString = configuration.GetConnectionString("DefaultConnection");
+        if (env.IsStaging())
+        {
+            services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMemoryDatabase"));
+        }
+        else
+        {
+            string connectionString = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+        }
 
-        services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
         services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
