@@ -2,6 +2,7 @@
 using CatalogApi.Context;
 using CatalogApi.DTOs.Mappings;
 using CatalogApi.Repository;
+using CatalogApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,8 @@ public static class ServiceCollectionExtension
         });
         IMapper mapper = mappingConfig.CreateMapper();
         services.AddSingleton(mapper);
+
+        services.AddScoped<IAuthService, AuthService>();
     }
 
     public static void ConfigureSwagger(this IServiceCollection services)

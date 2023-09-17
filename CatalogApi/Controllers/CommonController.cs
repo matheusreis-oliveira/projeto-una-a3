@@ -13,6 +13,7 @@ namespace CatalogApi.Controllers
     /// </summary>
     /// <typeparam name="TEntity">Tipo da Entidade/Modelo</typeparam>
     /// <typeparam name="TDto">Tipo do DTO</typeparam>
+    [Produces("application/json")]
     [Route("api/[Controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
