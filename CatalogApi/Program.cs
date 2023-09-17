@@ -10,7 +10,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors();
 
 // Configure database and authentication
-
 ConfigurationManager config = builder.Configuration;
 
 builder.Services.ConfigureDbContext(config);
