@@ -2,6 +2,8 @@
 using CatalogApi.Models;
 using Microsoft.AspNetCore.Identity;
 
+namespace CatalogApi.Tests;
+
 public static class Seeder
 {
     public static async Task Initialize(AppDbContext context, UserManager<IdentityUser> userManager)
@@ -24,26 +26,26 @@ public static class Seeder
             Name = "Eletrônicos",
             ImageUrl = "https://example.com/images/eletronicos.jpg",
             Products = new List<Product>
+    {
+        new Product
         {
-            new Product
-            {
-                Name = "Smartphone",
-                Description = "Smartphone com tela de 6.5 polegadas",
-                Price = 1000.00m,
-                ImageUrl = "https://example.com/images/smartphone.jpg",
-                Stock = 100,
-                RegisterDate = DateTime.Now,
-            },
-            new Product
-            {
-                Name = "Notebook",
-                Description = "Notebook com processador de última geração",
-                Price = 2000.00m,
-                ImageUrl = "https://example.com/images/notebook.jpg",
-                Stock = 50,
-                RegisterDate = DateTime.Now,
-            }
+            Name = "Smartphone",
+            Description = "Smartphone com tela de 6.5 polegadas",
+            Price = 1000.00m,
+            ImageUrl = "https://example.com/images/smartphone.jpg",
+            Stock = 100,
+            RegisterDate = DateTime.Now,
+        },
+        new Product
+        {
+            Name = "Notebook",
+            Description = "Notebook com processador de última geração",
+            Price = 2000.00m,
+            ImageUrl = "https://example.com/images/notebook.jpg",
+            Stock = 50,
+            RegisterDate = DateTime.Now,
         }
+    }
         };
 
         var products = category.Products.ToList();

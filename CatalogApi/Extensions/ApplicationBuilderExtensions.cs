@@ -1,4 +1,5 @@
 ﻿using CatalogApi.Context;
+using CatalogApi.Tests;
 using Microsoft.AspNetCore.Identity;
 
 public static class ApplicationBuilderExtensions
