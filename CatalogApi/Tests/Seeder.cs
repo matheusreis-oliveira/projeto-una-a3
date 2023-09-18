@@ -23,9 +23,7 @@ public static class Seeder
         {
             Name = "Eletrônicos",
             ImageUrl = "https://example.com/images/eletronicos.jpg",
-        };
-
-        var products = new List<Product>
+            Products = new List<Product>
         {
             new Product
             {
@@ -35,7 +33,6 @@ public static class Seeder
                 ImageUrl = "https://example.com/images/smartphone.jpg",
                 Stock = 100,
                 RegisterDate = DateTime.Now,
-                Category = category
             },
             new Product
             {
@@ -45,9 +42,11 @@ public static class Seeder
                 ImageUrl = "https://example.com/images/notebook.jpg",
                 Stock = 50,
                 RegisterDate = DateTime.Now,
-                Category = category
             }
+        }
         };
+
+        var products = category.Products.ToList();
 
         await context.Category.AddAsync(category);
         await context.Product.AddRangeAsync(products);
