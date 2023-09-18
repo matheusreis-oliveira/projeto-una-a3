@@ -2,42 +2,64 @@
 
 namespace CatalogApi.Repository
 {
-    public class UnitOfWork : IUnitOfWork
+    /// <summary>
+    /// Classe UnitOfWork para agrupar as operações de repositório e garantir uma transação consistente.
+    /// </summary>
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private ProductRepository _produtoRepo;
-        private CategoryRepository _categoriaRepo;
-        public AppDbContext _dbContext;
+        private readonly IProductRepository _produtoRepo;
+        private readonly ICategoryRepository _categoriaRepo;
+        private readonly AppDbContext _dbContext;
+        private readonly ILogger<UnitOfWork> _logger;
 
-        public UnitOfWork(AppDbContext context)
+        /// <summary>
+        /// Construtor para inicializar o UnitOfWork com os repositórios e contexto de banco de dados necessários.
+        /// </summary>
+        /// <param name="context">Contexto do banco de dados.</param>
+        /// <param name="productRepository">Repositório de produtos.</param>
+        /// <param name="categoryRepository">Repositório de categorias.</param>
+        /// <param name="logger">Logger para registrar mensagens.</param>
+        public UnitOfWork(AppDbContext context, IProductRepository productRepository, ICategoryRepository categoryRepository, ILogger<UnitOfWork> logger)
         {
             _dbContext = context;
+            _produtoRepo = productRepository;
+            _categoriaRepo = categoryRepository;
+            _logger = logger;
         }
 
-        public IProductRepository ProductRepository
-        {
-            get
-            {
-                return _produtoRepo = _produtoRepo ?? new ProductRepository(_dbContext);
-            }
-        }
+        /// <summary>
+        /// Obtém o repositório de produtos.
+        /// </summary>
+        public IProductRepository ProductRepository => _produtoRepo;
 
-        public ICategoryRepository CategoryRepository
-        {
-            get
-            {
-                return _categoriaRepo = _categoriaRepo ?? new CategoryRepository(_dbContext);
-            }
-        }
+        /// <summary>
+        /// Obtém o repositório de categorias.
+        /// </summary>
+        public ICategoryRepository CategoryRepository => _categoriaRepo;
 
+        /// <summary>
+        /// Commit as alterações no banco de dados.
+        /// </summary>
+        /// <returns>Task para operação assíncrona.</returns>
         public async Task Commit()
         {
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ocorreu um erro ao salvar as mudanças no banco de dados.");
+                throw;
+            }
         }
 
+        /// <summary>
+        /// Libera os recursos do contexto do banco de dados.
+        /// </summary>
         public void Dispose()
         {
-            _dbContext.Dispose();
+            _dbContext?.Dispose();
         }
-
     }
 }

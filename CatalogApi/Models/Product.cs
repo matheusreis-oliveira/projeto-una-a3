@@ -5,10 +5,8 @@ using System.Text.Json.Serialization;
 namespace CatalogApi.Models
 {
     [Table("Produtos")]
-    public class Product
+    public class Product : BaseModel
     {
-        [Key]
-        public Guid Id { get; set; }
 
         [Required(ErrorMessage = "O nome é obrigatório")]
         [StringLength(80, ErrorMessage = "O nome deve ter no máximo {1} e no mínimo {2} caracteres",
