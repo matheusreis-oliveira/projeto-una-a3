@@ -15,6 +15,7 @@ namespace CatalogApi.Controllers
     /// <typeparam name="TDto">Tipo do DTO</typeparam>
     [Produces("application/json")]
     [Route("api/[Controller]")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     
