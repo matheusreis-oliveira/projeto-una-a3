@@ -24,6 +24,7 @@ namespace CatalogApi.Controllers
     {
         protected readonly IUnitOfWork _uof;
         protected readonly IMapper _mapper;
+        protected abstract string GetByIdRouteName { get; }
 
         /// <summary>
         /// Construtor para inicializar o CommonController.
@@ -58,8 +59,8 @@ namespace CatalogApi.Controllers
         /// </summary>
         /// <param name="id">O ID da entidade.</param>
         /// <returns>Uma ação que retorna o DTO.</returns>
-        [HttpGet("{id}")]
-        public virtual async Task<ActionResult<TDto>> Get(Guid id)
+        [HttpGet("{id}", Name = "GetById")]
+        public virtual async Task<ActionResult<TDto>> GetById(Guid id)
         {
             var entity = await Repository.GetById(e => e.Id == id);
 
@@ -87,7 +88,7 @@ namespace CatalogApi.Controllers
 
             var newDto = _mapper.Map<TDto>(entity);
 
-            return new CreatedAtRouteResult("GetById", new { id = entity.Id }, newDto);
+            return CreatedAtRoute(GetByIdRouteName, new { id = entity.Id }, newDto);
         }
 
         /// <summary>
