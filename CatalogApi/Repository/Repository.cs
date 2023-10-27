@@ -67,5 +67,14 @@ namespace CatalogApi.Repository
             _context.Entry(entity).State = EntityState.Modified;
             _context.Set<T>().Update(entity);
         }
+
+        /// <summary>
+        /// Salva as alterações no banco de dados de forma assíncrona.
+        /// </summary>
+        /// <returns>Task representando a operação assíncrona.</returns>
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }
