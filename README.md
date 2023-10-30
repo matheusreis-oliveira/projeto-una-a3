@@ -28,7 +28,6 @@ Para executar o projeto, siga estas etapas:
 1.  Abra o arquivo de solução `projeto-una-a3.sln` no Visual Studio.
 2.  Configure o ambiente de desenvolvimento conforme necessário.
 3.  Execute a aplicação.
-4. Utilize o usuario padrão para autenticação.
 
 ## Licença
 
