@@ -14,6 +14,7 @@ namespace CatalogApi.Controllers
             : base(uof, mapper)
         { }
 
+        protected override string GetByIdRouteName => "GetCategoryById";
         protected override IRepository<Category> Repository => _uof.CategoryRepository;
 
         [HttpGet("products")]
@@ -23,6 +24,12 @@ namespace CatalogApi.Controllers
 
             var categoriesDto = _mapper.Map<List<CategoryDTO>>(categories);
             return categoriesDto;
+        }
+
+        [HttpGet("{id}", Name = "GetCategoryById")]
+        public override Task<ActionResult<CategoryDTO>> GetById(Guid id)
+        {
+            return base.GetById(id);
         }
     }
 }

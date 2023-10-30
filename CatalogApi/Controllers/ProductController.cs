@@ -14,6 +14,7 @@ namespace CatalogApi.Controllers
             : base(uof, mapper)
         { }
 
+        protected override string GetByIdRouteName => "GetProductById";
         protected override IRepository<Product> Repository => _uof.ProductRepository;
 
         [HttpGet("smallprice")]
@@ -23,6 +24,12 @@ namespace CatalogApi.Controllers
             var productsDto = _mapper.Map<List<ProductDTO>>(product);
 
             return productsDto;
+        }
+
+        [HttpGet("{id}", Name = "GetProductById")]
+        public override Task<ActionResult<ProductDTO>> GetById(Guid id)
+        {
+            return base.GetById(id);
         }
     }
 }

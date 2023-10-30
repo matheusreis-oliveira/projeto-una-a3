@@ -1,5 +1,6 @@
 ﻿using CatalogApi.Context;
 using Microsoft.EntityFrameworkCore;
+using PagedList.Pagination;
 using System.Linq.Expressions;
 
 namespace CatalogApi.Repository
@@ -41,6 +42,18 @@ namespace CatalogApi.Repository
         }
 
         /// <summary>
+        /// Obtém uma lista paginada de entidades.
+        /// </summary>
+        /// <param name="pageNumber">O número da página.</param>
+        /// <param name="pageSize">O tamanho da página.</param>
+        /// <returns>O resultado da tarefa contém a lista paginada de entidades.</returns>
+        public async Task<PagedList<T>> GetPaged(int pageNumber, int pageSize)
+        {
+            var query = Get();
+            return await PagedList<T>.ToPagedList(query, pageNumber, pageSize);
+        }
+
+        /// <summary>
         /// Adiciona um novo registro à entidade.
         /// </summary>
         /// <param name="entity">Registro a ser adicionado.</param>
@@ -66,6 +79,15 @@ namespace CatalogApi.Repository
         {
             _context.Entry(entity).State = EntityState.Modified;
             _context.Set<T>().Update(entity);
+        }
+
+        /// <summary>
+        /// Salva as alterações no banco de dados de forma assíncrona.
+        /// </summary>
+        /// <returns>Task representando a operação assíncrona.</returns>
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -4,7 +4,7 @@ using CatalogApi.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using PagedList.Pagination;
 
 namespace CatalogApi.Controllers
 {
@@ -18,13 +18,14 @@ namespace CatalogApi.Controllers
     [ApiConventionType(typeof(DefaultApiConventions))]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    
+
     public abstract class CommonController<TEntity, TDto> : ControllerBase
         where TEntity : BaseModel
         where TDto : class
     {
         protected readonly IUnitOfWork _uof;
         protected readonly IMapper _mapper;
+        protected abstract string GetByIdRouteName { get; }
 
         /// <summary>
         /// Construtor para inicializar o CommonController.
@@ -47,10 +48,10 @@ namespace CatalogApi.Controllers
         /// </summary>
         /// <returns>Uma ação que retorna uma lista de DTOs.</returns>
         [HttpGet]
-        public virtual async Task<ActionResult<IEnumerable<TDto>>> Get()
+        public virtual async Task<ActionResult<IEnumerable<TDto>>> Get([FromQuery] QueryStringParameters parameters)
         {
-            var entities = await Repository.Get().ToListAsync();
-            var dtos = _mapper.Map<List<TDto>>(entities);
+            var pagedList = await Repository.GetPaged(parameters.PageNumber, parameters.PageSize);
+            var dtos = _mapper.Map<List<TDto>>(pagedList);
             return dtos;
         }
 
@@ -59,8 +60,8 @@ namespace CatalogApi.Controllers
         /// </summary>
         /// <param name="id">O ID da entidade.</param>
         /// <returns>Uma ação que retorna o DTO.</returns>
-        [HttpGet("{id}")]
-        public virtual async Task<ActionResult<TDto>> Get(Guid id)
+        [HttpGet("{id}", Name = "GetById")]
+        public virtual async Task<ActionResult<TDto>> GetById(Guid id)
         {
             var entity = await Repository.GetById(e => e.Id == id);
 
@@ -88,7 +89,7 @@ namespace CatalogApi.Controllers
 
             var newDto = _mapper.Map<TDto>(entity);
 
-            return new CreatedAtRouteResult("GetById", new { id = entity.Id }, newDto);
+            return CreatedAtRoute(GetByIdRouteName, new { id = entity.Id }, newDto);
         }
 
         /// <summary>

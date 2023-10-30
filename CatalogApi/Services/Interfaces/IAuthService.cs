@@ -1,9 +1,10 @@
 ﻿using CatalogApi.DTOs;
 
-namespace CatalogApi.Services
+namespace CatalogApi.Services.Interfaces
 {
     public interface IAuthService
     {
-        UserToken GenerateToken(UserDto userInfo);
+        Task<UserToken> RegisterUser(UserDto userInfo);
+        Task<UserToken> LoginUser(LoginDto userInfo);
     }
 }

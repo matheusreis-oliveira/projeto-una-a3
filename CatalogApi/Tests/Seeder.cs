@@ -6,16 +6,16 @@ namespace CatalogApi.Tests;
 
 public static class Seeder
 {
-    public static async Task Initialize(AppDbContext context, UserManager<IdentityUser> userManager)
+    public static async Task Initialize(AppDbContext context, UserManager<User> userManager)
     {
-        var user = new IdentityUser
+        var user = new User
         {
             UserName = "teste@teste.com",
             Email = "teste@teste.com",
             EmailConfirmed = true,
         };
 
-        var result = await userManager.CreateAsync(user, "Test@123");
+        var result = await userManager.CreateAsync(user);
         if (!result.Succeeded)
         {
             throw new Exception("Failed to create test user");

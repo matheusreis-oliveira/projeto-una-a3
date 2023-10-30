@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using CatalogApi.Context;
 using CatalogApi.DTOs.Mappings;
+using CatalogApi.Models;
 using CatalogApi.Repository;
 using CatalogApi.Services;
+using CatalogApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -96,8 +98,8 @@ public static class ServiceCollectionExtension
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
         }
 
-        services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders();
+        services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
     }
 }

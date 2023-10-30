@@ -1,5 +1,5 @@
 ﻿using CatalogApi.Context;
-using CatalogApi.Tests;
+using CatalogApi.Models;
 using Microsoft.AspNetCore.Identity;
 
 public static class ApplicationBuilderExtensions
@@ -34,7 +34,7 @@ public static class ApplicationBuilderExtensions
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<AppDbContext>();
-                var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+                var userManager = services.GetRequiredService<UserManager<User>>();
                 Seeder.Initialize(context, userManager).Wait();
             }
         }
