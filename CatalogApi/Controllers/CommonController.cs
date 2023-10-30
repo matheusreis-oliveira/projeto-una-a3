@@ -4,7 +4,7 @@ using CatalogApi.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using PagedList.Pagination;
 
 namespace CatalogApi.Controllers
 {
@@ -17,7 +17,7 @@ namespace CatalogApi.Controllers
     [Route("api/[Controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    
+
     public abstract class CommonController<TEntity, TDto> : ControllerBase
         where TEntity : BaseModel
         where TDto : class
@@ -47,10 +47,10 @@ namespace CatalogApi.Controllers
         /// </summary>
         /// <returns>Uma ação que retorna uma lista de DTOs.</returns>
         [HttpGet]
-        public virtual async Task<ActionResult<IEnumerable<TDto>>> Get()
+        public virtual async Task<ActionResult<IEnumerable<TDto>>> Get([FromQuery] QueryStringParameters parameters)
         {
-            var entities = await Repository.Get().ToListAsync();
-            var dtos = _mapper.Map<List<TDto>>(entities);
+            var pagedList = await Repository.GetPaged(parameters.PageNumber, parameters.PageSize);
+            var dtos = _mapper.Map<List<TDto>>(pagedList);
             return dtos;
         }
 

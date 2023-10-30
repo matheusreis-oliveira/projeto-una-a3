@@ -1,5 +1,6 @@
 ﻿using CatalogApi.Context;
 using Microsoft.EntityFrameworkCore;
+using PagedList.Pagination;
 using System.Linq.Expressions;
 
 namespace CatalogApi.Repository
@@ -38,6 +39,18 @@ namespace CatalogApi.Repository
         public async Task<T> GetById(Expression<Func<T, bool>> property)
         {
             return await _context.Set<T>().AsNoTracking().SingleOrDefaultAsync(property);
+        }
+
+        /// <summary>
+        /// Obtém uma lista paginada de entidades.
+        /// </summary>
+        /// <param name="pageNumber">O número da página.</param>
+        /// <param name="pageSize">O tamanho da página.</param>
+        /// <returns>O resultado da tarefa contém a lista paginada de entidades.</returns>
+        public async Task<PagedList<T>> GetPaged(int pageNumber, int pageSize)
+        {
+            var query = Get();
+            return await PagedList<T>.ToPagedList(query, pageNumber, pageSize);
         }
 
         /// <summary>
