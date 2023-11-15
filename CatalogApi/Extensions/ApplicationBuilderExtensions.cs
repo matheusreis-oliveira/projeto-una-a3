@@ -28,15 +28,12 @@ public static class ApplicationBuilderExtensions
 
     public static void UseSeeder(this IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsStaging())
+        using (var scope = app.ApplicationServices.CreateScope())
         {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<AppDbContext>();
-                var userManager = services.GetRequiredService<UserManager<User>>();
-                Seeder.Initialize(context, userManager).Wait();
-            }
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<AppDbContext>();
+            var userManager = services.GetRequiredService<UserManager<User>>();
+            Seeder.Initialize(context, userManager).Wait();
         }
     }
 }

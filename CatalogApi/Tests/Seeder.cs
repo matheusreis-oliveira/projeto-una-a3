@@ -1,11 +1,17 @@
 ﻿using CatalogApi.Context;
 using CatalogApi.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 public static class Seeder
 {
     public static async Task Initialize(AppDbContext context, UserManager<User> userManager)
     {
+        if (await userManager.Users.AnyAsync())
+        {
+            return;
+        }
+
         var user = new User
         {
             UserName = "teste@teste.com",
