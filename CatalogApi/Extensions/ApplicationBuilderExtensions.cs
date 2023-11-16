@@ -17,13 +17,10 @@ public static class ApplicationBuilderExtensions
         });
     }
 
-    public static void ConfigureSwagger(this IApplicationBuilder app, IWebHostEnvironment env)
+    public static void ConfigureSwagger(this IApplicationBuilder app)
     {
-        if (env.IsDevelopment() || env.IsStaging())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        app.UseSwagger();
+        app.UseSwaggerUI();
     }
 
     public static void UseSeeder(this IApplicationBuilder app, IWebHostEnvironment env)
