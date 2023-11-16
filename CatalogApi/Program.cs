@@ -29,6 +29,6 @@ var app = builder.Build();
 
 // Configure middlewares
 app.UseSeeder(env);
-app.ConfigureSwagger(env);
+app.ConfigureSwagger();
 app.UseCustomMiddlewares();
 app.Run();
