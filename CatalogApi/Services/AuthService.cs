@@ -58,7 +58,8 @@ namespace CatalogApi.Services
                 throw new Exception("Usuário não encontrado.");
             }
 
-            var result = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, userInfo.Password);
+            var hashedPassword = _userManager.PasswordHasher.HashPassword(user, userInfo.Password);
+            var result = _userManager.PasswordHasher.VerifyHashedPassword(user, hashedPassword, userInfo.Password);
             if (result == PasswordVerificationResult.Failed)
             {
                 throw new Exception("Senha inválida.");
