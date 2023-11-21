@@ -20,5 +20,5 @@ public class Category : BaseModel
     [StringLength(300)]
     public string? ImageUrl { get; set; }
 
-    public ICollection<Product>? Products { get; set; }
+    public virtual ICollection<Product>? Products { get; set; }
 }

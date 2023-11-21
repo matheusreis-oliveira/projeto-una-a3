@@ -8,7 +8,9 @@ namespace CatalogApi.DTOs.Mappings
         public MappingProfile()
         {
             CreateMap<Product, ProductDTO>().ReverseMap();
-            CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Category, CategoryDTO>()
+                .ForMember(dto => dto.Product, opt => opt.MapFrom(c => c.Products))
+                .ReverseMap();
         }
     }
 }
